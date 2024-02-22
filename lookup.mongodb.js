@@ -15,7 +15,7 @@ use("relations");
 //   ownerId: ObjectId("65d5a4f9ad89033b2f7ae19d"),
 // });
 
-//? lookup
+//? lookup=> It is used to join table
 // example
 
 // db.vehicles.aggregate([
@@ -77,27 +77,80 @@ use("relations");
 //   address: "Tinkune",
 //   email: "sumitra@gmail.com",
 //   enrolledCourseIds: [
-//     ObjectId("65d5abbc68d1f91ed64a989a"),
-//     ObjectId("65d5abbc68d1f91ed64a989c"),
+//     ObjectId("65d6bd0910d8d709e85d133a"),
+//     ObjectId("65d6bd0910d8d709e85d133c"),
 //   ],
 // });
-db.students.aggregate([
+
+// db.students.aggregate([
+//   { $match: {} },
+//   {
+//     $lookup: {
+//       from: "courses",
+//       localField: "enrolledCourseIds",
+//       foreignField: "_id",
+//       as: "courseDetails",
+//     },
+//   },
+//   {
+//     $project: {
+//       name: 1,
+//       address: 1,
+//       email: 1,
+//       "courseDetails.name": 1,
+//       "courseDetails.duration": 1,
+//     },
+//   },
+// ]);
+
+// db.students.insertOne({
+//   name: "Anu,",
+//   address: "Neware",
+//   email: "anu@gmail.com",
+//   enrolledCourseIds: [
+//     ObjectId("65d6bd0910d8d709e85d133b"),
+//     ObjectId("65d6bd0910d8d709e85d1339"),
+//   ],
+// });
+
+// db.students.aggregate([
+//   { $match: {} },
+//   {
+//     $lookup: {
+//       from: "courses",
+//       localField: "enrolledCourseIds",
+//       foreignField: "_id",
+//       as: "coursedetails",
+//     },
+//   },
+//   {
+//     $project: {
+//       name: 1,
+//       address: 1,
+//       email: 1,
+
+//       "courseDetails.name": 1,
+//       "courseDetails.duration": 1,
+//     },
+//   },
+// ]);
+
+db.courses.aggregate([
   { $match: {} },
   {
     $lookup: {
-      from: "courses",
-      localField: "enrolledCourseIds",
-      foreignField: "_id",
-      as: "courseDetails",
+      from: "students",
+      localField: "_id",
+      foreignField: "enrolledCourseIds",
+      as: "studentData",
     },
   },
   {
     $project: {
       name: 1,
-      address: 1,
-      email: 1,
-      "courseDetails.name": 1,
-      "courseDetails.duration": 1,
+      duration: 1,
+      "studentsDetails.name": 1,
+      "studentsDetails.email": 1,
     },
   },
 ]);
